@@ -26,7 +26,6 @@ app.post('/rest/train/:partition', function (request, response, next) {
 	try {
 		input = JSON.parse(request.body.input);
 	} catch (e) {
-		console.log(request.body);
 		return response.json('parameter input is not a valid JSON');
 	}
 	var pool = pools[request.params.partition];

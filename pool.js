@@ -16,6 +16,9 @@ function Word(word) {
 	this.total = 0;
 	this.results = {};
 
+	this.output = '';
+	this.confidentiality = 0.0;
+
 	this.train = function (result) {
 		this.total++;
 		this.results[result] = (this.results[result] || 0) + 1;
@@ -25,9 +28,9 @@ function Word(word) {
 module.exports = function Pool() {
 	var examples = [];
 	var words = {};
+	var results = {};
 
 	function processWord(word, result) {
-		console.log(word, result);
 		if (!words[word]) {
 			words[word] = new Word(word);
 		}
@@ -35,16 +38,47 @@ module.exports = function Pool() {
 	}
 
 	this.train = function (dataset, result) {
+		results[result] = true;
 		examples.push([dataset, result]);
 		for (var k in dataset) {
 			dataset[k].split(' ').forEach(function (v) {
 				processWord(k+':'+v, result);
 			});
 		}
-		console.log(words);
 	}
 
 	this.classify = function (dataset, success) {
-		success('', 0.0);
+		var results2 = {};
+		for (var k in results) {
+			results2[k] = 1;
+		}
+
+		function processWord(word) {
+			if (words[word]) {
+				word = words[word];
+				for (var k in results) {
+					var prob = 1 - (word.results[k] || 0) / (1 + word.total);
+					results2[k] *= prob;
+				}
+			}
+		}
+
+		for (var k in dataset) {
+			dataset[k].split(' ').forEach(function (v) {
+				processWord(k+':'+v);
+			});
+		}
+		var total = 0;
+		var best = '';
+		var bestscore = 1;
+		for (var k in results) {
+			if (results2[k] < bestscore) {
+				best = k;
+				bestscore = results2[k];
+			}
+			total += results2[k];
+		}
+		console.log(results2);
+		success(best, 1 - bestscore / total);
 	}
 }
