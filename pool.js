@@ -78,7 +78,6 @@ module.exports = function Pool() {
 			}
 			total += results2[k];
 		}
-		console.log(results2);
 		success(best, 1 - bestscore / total);
 	}
 }
