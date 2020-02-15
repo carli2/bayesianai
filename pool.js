@@ -4,10 +4,11 @@
 module.exports = function Pool() {
 	var examples = [];
 
-	this.learn = function (dataset, result) {
-		this.examples.push([dataset, result]);
+	this.train = function (dataset, result) {
+		examples.push([dataset, result]);
 	}
 
-	this.classify = function (dataset) {
+	this.classify = function (dataset, success) {
+		success('', 0.0);
 	}
 }
