@@ -1,0 +1,14 @@
+{
+  "name": "ki",
+  "version": "1.0.0",
+  "description": "",
+  "main": "api.js",
+  "scripts": {
+    "test": "bash test.sh"
+  },
+  "author": "Carl-Philip Hänsch",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
